@@ -39,9 +39,18 @@ jobs:
       - name: run static
         run: python static.py
       - name: put built files into repo for pages
-        uses: actions/upload-artifact@v4
-        with:
-          path: built
+        uses: actions/checkout@v4
+        with: 
+          persist-credentials: false 
+          fetch-depth: 0
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add built/
+          git commit -m "actions commit"
+          git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push origin main   
+
   
   # Single deploy job since we're just deploying
   deploy:
