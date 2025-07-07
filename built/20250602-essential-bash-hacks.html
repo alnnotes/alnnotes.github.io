@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../includes/modern-normalize.css">
+    <link rel='stylesheet' href='../includes/base.css'>
+    <title>aln notes: Essential bash hacks</title>
+  </head>
+  <body id='page-wrapper'>
+    <div id="nav">
+      <span>aln notes</span>
+      <a href="all.html" class=''><strong><tt>all posts</tt></strong></a>
+      <a href="about.html" class=''><tt>about</tt></a>
+    </div>
+    <div id="container">
+  <div class='main-head'>Essential bash hacks</div>
+  <div class='sub-head'>for me, at least</div>
+  <div class="sub-head">Monday, 2nd June 2025</div>
+  <div class="content"><p>Create <code>~/.inputrc</code> with the following:</p>
+<div class="codehilite"><pre><span></span><div class="lang">sh</div><span class="nv">$include</span><span class="w"> </span>/etc/inputrc
+
+<span class="nb">set</span><span class="w"> </span>completion-ignore-case<span class="w"> </span>On
+<span class="s2">&quot;\e[A&quot;</span>:history-search-backward
+<span class="s2">&quot;\e[B&quot;</span>:history-search-forward
+</pre></div>
+
+<ul>
+<li>to ignore case when completing directory names, binary names, etc. (<em>e.g.</em>, in <code>cd</code>)</li>
+<li>to reverse-history-search starting from a partial command, using up- and down-arrows (<em>e.g.</em>, <code>whoa ↑</code> may show <code>whoami</code> if it had been previously typed. use arrow keys to navigate back and forth between historical partial matches)</li>
+</ul>
+<p>Add <code>export QUOTING_STYLE=literal</code> to <code>.bashrc</code> to get back to <code>coreutils</code> pre-8.25 <code>ls</code> behaviour (before a <strong>BUG</strong> was included; see <a href="https://unix.stackexchange.com/a/262162">https://unix.stackexchange.com/a/262162</a> for a nice dose of vitriol).</p></div>
+</div>
+  </body>
+</html>

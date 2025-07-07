@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../includes/modern-normalize.css">
+    <link rel='stylesheet' href='../includes/base.css'>
+    <title>aln notes: BLOG: setting up github pages</title>
+  </head>
+  <body id='page-wrapper'>
+    <div id="nav">
+      <span>aln notes</span>
+      <a href="all.html" class=''><strong><tt>all posts</tt></strong></a>
+      <a href="about.html" class=''><tt>about</tt></a>
+    </div>
+    <div id="container">
+  <div class='main-head'>BLOG: setting up github pages</div>
+  <div class='sub-head'></div>
+  <div class="sub-head">yesterday</div>
+  <div class="content"><p><strong>WIP WIP WIP</strong></p>
+<p>for the first proof-of-concept hosting i figured i'd just go for github pages. follws is a description of how to take the following folder structure, and make it nicely browsable as a website hosted with github pages. <strong>note:</strong> for parsimony and conciseness, the following guide describes the steps to take to set up exactly this blog; if you wish to follow them, you must adjust as necessary.</p>
+<p>note: i have <em>very</em> limited and <em>very</em> out-of-date experience with github (specifically -hub), so bear with, but below should be a reasonably comprehensive set of instructions.</p>
+<p>wrote this post simultaneously along working out what i was doing, and doing it. most steps below had an implicit 'i think' when writing, esp anything relating to github or actions/pipelines/build jobs - still haven't worked out the correct terminology for all this stuff</p>
+<div class="codehilite"><pre><span></span>static/posts/on-linux.md
+            /on-cats.md
+      /templates/post-template.html
+                /about-page.html
+      /includes/base.css
+               /font.woff
+      /built/on-linux.html        ┐ 
+            /on-cats.html         │ compiled .html files, ready to be
+            /post-template.html   │ served. these are the only files
+            /about-page.html      │ that the webserver need concern
+            /base.css             │ itself with
+            /font.woff            ┘ 
+      /static.py ─────────────────┬ an executable python file the CICD 
+                                  │ pipeline should run to generate the 
+                                  └ /build directory above
+</pre></div>
+
+<h2>github setup</h2>
+<ul>
+<li>create an account with name <code>alnnotes</code></li>
+<li>create a repository with name <code>alnnotes.github.io</code></li>
+</ul>
+<h2>git setup</h2>
+<ul>
+<li>from within <code>static/</code>:</li>
+<li><code>git init</code></li>
+<li><code>git remote add origin https://github.com/alnnotes/alnnotes.github.io</code></li>
+<li><code>git pull</code></li>
+<li><code>git checkout -f main</code></li>
+<li><code>git branch --set-upstream-to=origin/main</code></li>
+</ul>
+<h2>keys</h2>
+<p>switch to ssh key authentication, as I forgot that would be required</p>
+<ul>
+<li>if you've already configured git and github with an ssh key, this can all be skipped</li>
+<li>make a key: <code>ssh-keygen -t ed25519 -C "&lt;github signup email&gt;"</code></li>
+<li>save to <code>~/.ssh/id_FOO</code> and <code>id_FOO.pub</code> as prompted</li>
+<li><code>eval "$(ssh-agent -s)"</code></li>
+<li><code>ssh-add ~/.ssh/id_FOO</code></li>
+<li>on the github website: account settings &gt; 'SSH and GPG keys': add it</li>
+<li>add the following to <code>~/.ssh/config</code>:</li>
+</ul>
+<div class="codehilite"><pre><span></span>Host github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+</pre></div>
+
+<ul>
+<li>back in <code>static/</code>: <code>git remote set-url origin git@github.com:alnnotes/alnnotes.github.io.git</code></li>
+</ul>
+<h2>test it</h2>
+<ul>
+<li>create <code>index.html</code> with some content, <code>commit</code> and <code>push</code> (note: only <code>index.html</code> for now)</li>
+<li>go to the actions tab on the repo and see the pipeline</li>
+<li>when it finishes (it took some time (mostly queueing to start) for me, but it's a free service, so it's hard to complain), go to alnnotes.github.io in a browser and see your <code>index.html</code> content</li>
+</ul>
+<h2>.gitignore</h2>
+<ul>
+<li>make a <code>.gitignore</code>. i like <a href="http://gitignore.io">http://gitignore.io</a> - pop some relevant words into the bar and get a nice <code>.gitignore</code> to save in <code>static/</code> (i used <code>python</code>, <code>linux</code>, <code>emacs</code>)</li>
+<li><strong>add <code>built/</code> to .gitignore`</strong></li>
+</ul>
+<h2>setting up a building pipeline</h2>
+<ul>
+<li>website: repo settings &gt; pages &gt; source: github actions
+seems the classic behaviour of pushing whatever's on the configured branch to pages doesn't allow customising the pipeline, and we need to get it to run <code>static.py</code>, so we need to change to 'github actions'</li>
+<li>'browse all workflows' &gt; filter 'pages' &gt; see a big list of workflows for building then deploying the output from various static site generators, but unfortunately not the one i've just hacked togehter</li>
+<li>borrow the 'static html: deploy static files in a repository without a build' workflow; 'configure'</li>
+</ul>
+<p>above 'deploy:' add:</p>
+<div class="codehilite"><pre><span></span><div class="lang">yaml</div><span class="c1"># custom build job</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.13&#39;</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">install pip prereqs</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">python -m pip install --upgrade pip</span>
+<span class="w">          </span><span class="no">pip install -r .github/workflows/requirements.txt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">run static</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python .github/workflows/static.py</span>
+</pre></div>
+
+<p>push that to <code>main</code> and it should trigger that yaml
+- oh god this does take quite a while. at least it dies quickly if there are syntax errors
+- i have a new-found respect for dave at my last job, whose domain cicd was
+- stop telling me 'job started'; joining a queue doesn't constitute having 'started', in much the same way as i wouldn't tell someone i was 'having dinner' if i was in fact waiting for the restaurant to finish serving the current diners (plus those in front of me outside)</p>
+<ul>
+<li>hooray first successful run (<a href="https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443">https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443</a>)</li>
+<li>now <code>build</code> dired thrown away with job container</li>
+</ul></div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+@import url(pygments.css);
+
+:root {
+    --navbar: #002b36; /* solarised base03 */
+    --page-bg: #fdf6e3; /* solarised base3 */
+    --subtitle: #586e75; /* solarised base01 */
+    --maintext: #657b83 /* solarised base00 */
+}
+
+@font-face {
+    font-family: "brandtxt";
+    src: url('CaviarDreams-webfont.woff') format('woff'), font-weight: normal;
+    font-style:normal
+}
+
+pre {
+    padding: 5px
+}
+
+.lang {
+    color: var(--subtitle);
+    float: right;
+    font-weight: 700
+}
+
+#page-wrapper {
+    margin: 10px;
+    background-color: var(--page-bg)
+}
+
+#nav {
+    background-color: var(--navbar);
+    overflow: hidden;
+    margin: auto
+}
+
+#nav a,#nav span {
+    font-family: "brandtxt";
+    display: block;
+    color: var(--page-bg);
+    text-align: center
+}
+
+#nav a {
+    float: right;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: large
+}
+
+#nav span {
+    margin-left: 10px;
+    margin-top: 5px;
+    float: left;
+    padding-bottom: 5px;
+    font-size: xx-large;
+    user-select: none
+}
+
+#nav a.active,#nav a:hover {
+    background-color: var(--page-bg);
+    color: var(--navbar)
+}
+
+#nav a.active {
+    pointer-events: none
+}
+
+#container {
+    margin: 10px auto 20px
+}
+
+.main-head {
+    color: var(--navbar);
+    font-size: larger;
+    font-weight: 700
+}
+
+.datecell,.sub-head {
+    color: var(--subtitle);
+    font-size: xx-small;
+    vertical-align: middle;
+}
+
+.allsub {
+    font-size: xx-small;
+    vertical-align: middle;
+    font-style: italic;
+    color: var(--subtitle);
+}
+ 
+.content {
+    color: var(--navbar);
+    font-size: x-small
+}
+
+.alltitle {
+    font-size: small;
+}
+
+@media (min-width:600px) {
+    #container,#nav {
+        width: 70%
+    }
+}
