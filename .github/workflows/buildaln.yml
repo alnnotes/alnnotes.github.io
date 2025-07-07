@@ -25,6 +25,8 @@ jobs:
 
   # custom build job
   build:
+    permissions:
+          contents: write
   
     runs-on: ubuntu-latest
     steps:
@@ -37,8 +39,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: run script, commit back
-        permissions:
-          contents: write
         run: |
           python static.py
           ls
