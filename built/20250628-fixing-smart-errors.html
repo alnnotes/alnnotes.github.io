@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../includes/modern-normalize.css">
+    <link rel='stylesheet' href='../includes/base.css'>
+    <title>aln notes: fixing &#39;Currently unreadable (pending) sectors&#39; errors</title>
+  </head>
+  <body id='page-wrapper'>
+    <div id="nav">
+      <span>aln notes</span>
+      <a href="all.html" class=''><strong><tt>all posts</tt></strong></a>
+      <a href="about.html" class=''><tt>about</tt></a>
+    </div>
+    <div id="container">
+  <div class='main-head'>fixing &#39;Currently unreadable (pending) sectors&#39; errors</div>
+  <div class='sub-head'>how not to fix a hard drive</div>
+  <div class="sub-head">Saturday, 28th June 2025</div>
+  <div class="content"><p>Let's say you have a drive, and <code>smartctl -a</code> shows you some <code>197 Current_Pending_Sector</code> errors.</p>
+<p>Here's a (hacky-as-all-fuck, using-<code>badblocks</code>-against-<code>man</code>-advice, against-best-practices, potentially-very-harmful) quick fix:</p>
+<div class="codehilite"><pre><span></span><div class="lang">sh</div>badblocks<span class="w"> </span>-vsb<span class="w"> </span><span class="m">4096</span><span class="w"> </span>&gt;<span class="w"> </span>bad-sectors
+<span class="k">for</span><span class="w"> </span>x<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span>bad-sectors<span class="k">)</span><span class="p">;</span>
+<span class="w">    </span><span class="k">do</span><span class="w"> </span>sudo<span class="w"> </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdX<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">4096</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">seek</span><span class="o">=</span><span class="nv">$x</span><span class="p">;</span>
+<span class="k">done</span>
+</pre></div>
+
+<p>Just in case it's not abundantly clear from glancing at this: <strong>do not run</strong> any of that against any valuable, non-backed up data.</p></div>
+</div>
+  </body>
+</html>

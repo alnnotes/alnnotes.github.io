@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../includes/modern-normalize.css">
+    <link rel='stylesheet' href='../includes/base.css'>
+    <title>aln notes: dwm on debian bookworm</title>
+  </head>
+  <body id='page-wrapper'>
+    <div id="nav">
+      <span>aln notes</span>
+      <a href="all.html" class=''><strong><tt>all posts</tt></strong></a>
+      <a href="about.html" class=''><tt>about</tt></a>
+    </div>
+    <div id="container">
+  <div class='main-head'>dwm on debian bookworm</div>
+  <div class='sub-head'>some lessons learned from decades of running an obsolescent tiling window manager</div>
+  <div class="sub-head">Friday, 6th June 2025</div>
+  <div class="content"><p>For a long time, I was using <code>dwm5.6</code> (2009-2022ish), because I had hand-patched <code>dwm.c</code> to support a particular workflow quirk re multi-monitor tag behaviour, and didn't feel too much like doing it again.</p>
+<p>Working as I am now with a single desktop monitor, I decided to just get rid of it and install <code>dwm6.5</code> (2024). Follows are notes, honed from years of compiling years-out-of-date <code>dwm</code> instances on dozens of machines. <em>Note: I started this guide with the idea of it being a 'how to install in 2025' sort of guide, but that turns out to be pretty straight-forward, so this instead contains tips-and-tricks, gotchas, and some less-than-intuitive stuff that still remains in the most-recent version.</em> This is not a particularly-'beginner friendly' guide; basic *nix administration is assumed. I will add to this post whenever I find myself doing anything wm-related.</p>
+<h2>Downloading and installing</h2>
+<ul>
+<li>I strongly recommend working from a <code>~/dwm</code> working directory, or similar</li>
+<li>I also strongly recommend setting this directory up as a VCS repo, especially if you have any longer-term plans for using it</li>
+<li>fetch from <a href="https://dwm.suckless.org">https://dwm.suckless.org</a>. <code>tar -xf</code> it, and <code>cd</code> into <code>dwm-6.5</code></li>
+<li><code>make</code> and fix any missing prereqs. Here are the ones I had to (on <code>bookworm</code>, and these are all <code>bookworm</code> packages):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X11/Xlib.h</code></td>
+<td><code>libx11-dev</code></td>
+</tr>
+<tr>
+<td><code>X11/Xft/Xft.h</code></td>
+<td><code>libxft-dev</code></td>
+</tr>
+<tr>
+<td><code>X11/extensions/Xinerama.h</code></td>
+<td><code>libxinerama-dev</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>sudo make clean install</code></li>
+<li>fetch <code>dmenu</code> (5.3 was the most-recent at time of writing) from <a href="https://tools.suckless.org/dmenu">https://tools.suckless.org/dmenu</a></li>
+<li>extract, <code>make</code>, <code>sudo make clean install</code></li>
+</ul>
+<h2><code>.desktop</code> file</h2>
+<p>To support <code>lightdm</code> and <code>gdm</code> (and doubtlessly others), create a <code>.desktop</code> file in <code>/usr/share/xsessions/</code> with the following content:</p>
+<div class="codehilite"><pre><span></span>[Desktop Entry]
+Encoding=UTF-8
+name=dwm
+comment=dwm
+Exec=&lt;rundwm script&gt;
+Type=XSession
+</pre></div>
+
+<ul>
+<li><code>chmod a+r</code> it</li>
+</ul>
+<h2><code>rundwm</code> script</h2>
+<p>as referenced in the <code>.desktop</code>, create an auxillary running script. the following is a barebones example that should at least give you an ideal of what it might contain:</p>
+<div class="codehilite"><pre><span></span><div class="lang">sh</div><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span>xsetroot<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>date<span class="w"> </span>+<span class="s2">&quot;%a %d %b %Y  %R&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span>sleep<span class="w"> </span><span class="m">0</span>.5m
+<span class="k">done</span><span class="w"> </span><span class="p">&amp;</span>
+
+vivaldi<span class="w"> </span><span class="p">&amp;</span>
+thunderbird<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>
+
+<span class="nb">exec</span><span class="w"> </span>dwm
+</pre></div>
+
+<ul>
+<li>also <code>chmod a+r</code></li>
+</ul>
+<h2>configuration</h2>
+<p>most configuration can be achieved by editing <code>config.h</code>; only much-deeper changes to the fundamental behaviour require changes to <code>dwm.c</code>. it's largely self-explanatory, other than some unintuitive bits described below:</p>
+<ul>
+<li>run <code>xprop</code> and click on a target instance/window</li>
+<li><code>WM_CLASS(STRING)</code> will give you <code>(&lt;instance&gt;, &lt;class&gt;)</code></li>
+<li><code>WM_NAME(STRING)</code> (if it exists, which it likely won't) will give you <code>&lt;title&gt;</code></li>
+<li>fill in one (but not multiple) of those into the <code>rules[]</code> <code>const</code> and control which tags things start with</li>
+</ul>
+<!--  -->
+
+<ul>
+<li>for tag masking, the tags are zero-indexed left-to-right</li>
+<li><code>0</code> is the first tag (or <code>0</code>)</li>
+<li><code>1 &lt;&lt; 3</code> is the fifth tag (or <code>4</code>)</li>
+</ul>
+<!--  -->
+
+<ul>
+<li><code>#define MODKEY Mod4Mask</code>. <code>MODKEY</code> is the primary modifier; setting it to <code>Mod4Mask</code> uses <code>super</code>, which I think works pretty well alongside shift.</li>
+</ul>
+<!--  -->
+
+<ul>
+<li>to issue <code>custom --command</code> on keypress:</li>
+<li>declare the following: <code>static const char *foo[] = {'custom', '--command', NULL}</code> (that's right; do your own null-terminating). the important thing to note here is that spaces get swallowed into an array of space-separated command elements</li>
+<li>then add it to <code>keys[]</code> as such: <code>{MODKEY|ShiftMask, XK_Delete, spawn {.v = foo }}</code> (for <code>MODKEY</code>+shift+del, for example)</li>
+<li>get the <code>XK_foo</code> value for your desired key from an <code>xev -event keyboard</code> query; follow the <code>MODKEY|ShiftMask</code> stuff from examples already in <code>keys[]</code></li>
+</ul>
+<h2>patching</h2>
+<ul>
+<li>download a patch diff from suckless, add it to a <code>patches/</code> subdirectory</li>
+<li>in the <code>dwm.c</code> directory: <code>patch -p1 &lt; patches/foo-patch.diff</code></li>
+<li>note: the diff for <code>swapfocus</code> is broken, but it can be fixed by partially applying it, then opening <code>dwm.c.rej</code> and manually applying the logic to the conditional it fails on. the logic has changed since the version it was compiled for, but a bit of common sense will get you there. bonus: you get to boast ‘oh, you just customise by editing <code>config.h</code>? if i’m having a problem with <code>dwm</code>, i just edit the <code>c</code> source. no biggie.’ <strong>if you fail here, try using the stacker patch. its features are a superset of <code>swapfocus</code>‘s</strong> – just modify the conf a little.</li>
+</ul>
+<h2>miscellaneous hints and tips</h2>
+<ul>
+<li>the <code>rundwm</code> script above just throws some basic information into <code>X</code>'s <code>WM_NAME</code>/’status bar’. if you want something more complex there, it’s probably easiest to branch out from that bash script and use <code>dwmstatus</code>. see: <a href="https://dwm.suckless.org/status_monitor/">https://dwm.suckless.org/status_monitor/</a></li>
+<li><a href="https://github.com/kolbusa/stalonetray">https://github.com/kolbusa/stalonetray</a> works very well if you wish to occasionally (there are better solutions if this is part of your workflow, but it’s not part of mine, so I don’t know what they are) use the system tray/access something through the system tray. I prefer not to remember network configuration commands, and I haven’t come across anything simpler than <code>nm-applet</code>, so O use <code>stalonetray</code> almost exclusively for that (probably less than once a month)</li>
+<li><a href="https://gist.github.com/nic0-lab/c435dd4e77b2b3d274d142b126899525">https://gist.github.com/nic0-lab/c435dd4e77b2b3d274d142b126899525</a> is a good page to ctrl+f a keyword to find a patch</li>
+<li>download <code>wmname</code> from <a href="https://tools.suckless.org/x/wmname/">https://tools.suckless.org/x/wmname/</a>; extract it; <code>make</code> and <code>make clean install</code>. if you run into any application that misbehaves, <strong>your first attempt to fix it should be <code>wmname LG3D</code></strong>. this commandlet will work in &gt;95% of cases, in my experience.</li>
+</ul></div>
+</div>
+  </body>
+</html>
