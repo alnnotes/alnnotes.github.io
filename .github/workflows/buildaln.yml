@@ -39,7 +39,6 @@ jobs:
       - name: run script, commit back
         run: |
           python static.py
-          ls
           git config --global user.name 'bot'
           git config --global user.email 'bot@users.noreply.github.com'
           git add -f built
@@ -48,6 +47,7 @@ jobs:
 
   # Single deploy job since we're just deploying
   deploy:
+    needs: build # stop concurrency, built files have to be pushed back to repo before pages serves them
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: '.'
+          path: 'built/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
