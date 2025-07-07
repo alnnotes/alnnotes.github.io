@@ -1,7 +1,10 @@
 -----
-title: BLOG: setting up github pages
+title: "BLOG: setting up github pages"
 date: 2025-07-06
 -----
+
+
+**WIP WIP WIP**
 
 for the first proof-of-concept hosting i figured i'd just go for github pages. follws is a description of how to take the following folder structure, and make it nicely browsable as a website hosted with github pages. **note:** for parsimony and conciseness, the following guide describes the steps to take to set up exactly this blog; if you wish to follow them, you must adjust as necessary.
 
@@ -93,3 +96,4 @@ above 'deploy:' add:
 push that to `main` and it should trigger that yaml
 - oh god this does take quite a while. at least it dies quickly if there are syntax errors
 - i have a new-found respect for dave at my last job, whose domain cicd was
+- stop telling me 'job started'; joining a queue doesn't constitute having 'started', in much the same way as i wouldn't tell someone i was 'having dinner' if i was in fact waiting for the restaurant to finish serving the current diners (plus those in front of me outside)
