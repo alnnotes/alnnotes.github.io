@@ -90,8 +90,7 @@ all_posts = []
 for mdfile in Path('posts').glob('*.md'):
     with open(mdfile) as f:
         front = frontmatter.load(mdfile).to_dict()
-        fn = f"{front.get('url', mdfile.stem)}.html"
-        front.update({'filename': fn})
+        front.update({'filename': front.get('url', mdfile.stem)})
         all_posts.append(front)
 
 out = template.render(
