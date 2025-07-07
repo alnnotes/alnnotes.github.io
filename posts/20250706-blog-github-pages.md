@@ -97,3 +97,6 @@ push that to `main` and it should trigger that yaml
 - oh god this does take quite a while. at least it dies quickly if there are syntax errors
 - i have a new-found respect for dave at my last job, whose domain cicd was
 - stop telling me 'job started'; joining a queue doesn't constitute having 'started', in much the same way as i wouldn't tell someone i was 'having dinner' if i was in fact waiting for the restaurant to finish serving the current diners (plus those in front of me outside)
+
+- hooray first successful run (<https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443>)
+- now `build` dired thrown away with job container
