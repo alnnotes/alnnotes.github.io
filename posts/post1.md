@@ -1,7 +1,7 @@
 ---
 title: testing site generator
 subtitle: foo
-date: 2025-07-06
+date: 2020-07-06
 ---
 
 
