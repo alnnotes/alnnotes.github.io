@@ -4,6 +4,7 @@ date: 2025-06-06
 subtitle: some lessons learned from decades of running an obsolescent tiling window manager
 ----
 
+
 For a long time, I was using `dwm5.6` (2009-2022ish), because I had hand-patched `dwm.c` to support a particular workflow quirk re multi-monitor tag behaviour, and didn't feel too much like doing it again.
 
 Working as I am now with a single desktop monitor, I decided to just get rid of it and install `dwm6.5` (2024). Follows are notes, honed from years of compiling years-out-of-date `dwm` instances on dozens of machines. *Note: I started this guide with the idea of it being a 'how to install in 2025' sort of guide, but that turns out to be pretty straight-forward, so this instead contains tips-and-tricks, gotchas, and some less-than-intuitive stuff that still remains in the most-recent version.* This is not a particularly-'beginner friendly' guide; basic \*nix administration is assumed. I will add to this post whenever I find myself doing anything wm-related.
