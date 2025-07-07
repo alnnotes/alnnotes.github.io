@@ -22,7 +22,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-
   # custom build job
   build:
     permissions:
