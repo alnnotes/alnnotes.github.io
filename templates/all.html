@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class='main-head'>
+    what might you discover?!
+  </div>
+  <div>
+
+    Most recent first.
+
+    <table>
+        {% for post in all_posts|sort(attribute='date', reverse=True) %}
+      <tr>
+        <td class="datecell">{{post.date.strftime("%b. %Y")}}</td>
+        <td><a href='{{post.filename}}' class='alltitle'>{{post.title}}</a> <span class='allsub'>{{post.subtitle}}</span></td>
+      </tr>
+         {% endfor %}
+    </table>
+
+
+  </div>
+{% endblock content %}

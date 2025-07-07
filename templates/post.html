@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class='main-head'>{{ title }}</div>
+  <div class='sub-head'>{{ subtitle }}</div>
+  <div class="sub-head">{{ date }}</div>
+  <div class="content">{{ content|safe }}</div>
+{% endblock %}
