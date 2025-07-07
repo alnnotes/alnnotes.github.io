@@ -35,9 +35,9 @@ jobs:
       - name: install pip prereqs
         run: |
           python -m pip install --upgrade pip
-          pip install -r .github/workflows/requirements.txt
+          pip install -r requirements.txt
       - name: run static
-        run: python .github/workflows/static.py
+        run: python static.py
   
   # Single deploy job since we're just deploying
   deploy:
