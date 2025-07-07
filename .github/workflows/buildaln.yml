@@ -40,7 +40,7 @@ jobs:
         run: |
           python static.py
           ls
-          git config --global user.name 'aln'
+          git config --global user.name 'aln00000'
           git config --global user.email 'aln00000@users.noreply.github.com'
           git add built
           git commit -am "Automated report"
