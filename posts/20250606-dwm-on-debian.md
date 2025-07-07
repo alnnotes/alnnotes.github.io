@@ -2,6 +2,7 @@
 title: dwm on debian bookworm
 date: 2025-06-06
 subtitle: some lessons learned from decades of running an obsolescent tiling window manager
+url: dwm-notes
 ----
 
 For a long time, I was using `dwm5.6` (2009-2022ish), because I had hand-patched `dwm.c` to support a particular workflow quirk re multi-monitor tag behaviour, and didn't feel too much like doing it again.

@@ -2,6 +2,7 @@
 date: 2025-06-28
 title: fixing 'Currently unreadable (pending) sectors' errors
 subtitle: how not to fix a hard drive
+url: hd-smart-errors
 ----
 
 Let's say you have a drive, and `smartctl -a` shows you some `197 Current_Pending_Sector` errors.

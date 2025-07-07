@@ -29,7 +29,6 @@ env = Environment(
 )
 
 for mdfile in Path('posts').glob('*.md'):
-    name = mdfile.stem
     with open(mdfile) as f:
         post = frontmatter.load(f)
     matter = post.to_dict()
@@ -66,6 +65,8 @@ for mdfile in Path('posts').glob('*.md'):
     template = env.get_template('post.html')
     out = template.render(**matter)
 
+    # use url param in frontmatter, or just the filename if it's not specified
+    name = matter.get('url', mdfile.stem)
     with open(f'built/{name}.html', 'w') as f:
         f.write(out)
 

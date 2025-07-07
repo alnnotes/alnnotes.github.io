@@ -118,3 +118,9 @@ deploy:
 in deploy
 
 one of the commands in `build`: `git commit -am "built files added by action" || echo 'nothing to commit'` stops it saying 'nothing to commit, working tree clean'. this is not an error, but the workflow doesn't handle it well. the short-circuiting allows the command to pass by if no changes were made to the 'build' directory (note that this can be the case even if the built directory is deleted and recreated by the script - the workflow might have been triggered by a push to `requirements.txt` or anything not directly affecting the output)
+
+with:
+          ref: main
+in deploy
+
+get main as it currently is (as build has just pushed to it) don't use the ref that triggered the workflow (default)
