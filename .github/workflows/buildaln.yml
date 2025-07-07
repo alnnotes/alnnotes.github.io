@@ -43,6 +43,7 @@ jobs:
         with: 
           persist-credentials: false 
           fetch-depth: 0
+      - name: here
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
