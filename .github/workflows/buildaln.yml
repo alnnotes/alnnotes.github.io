@@ -1,4 +1,3 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: run static.py and deploy to pages
 
 on:
@@ -55,12 +54,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
           path: 'built/'
       - name: Deploy to GitHub Pages
         id: deployment
