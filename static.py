@@ -101,3 +101,5 @@ out = template.render(
 
 with open('built/all.html', 'w') as f:
     f.write(out)
+
+print("COMPLETED")

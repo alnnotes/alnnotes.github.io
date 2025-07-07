@@ -39,11 +39,9 @@ jobs:
       - name: run static
         run: python static.py
       - name: put built files into repo for pages
-        uses: EndBug/add-and-commit@v9
-        with: 
-          default_author: github_actions
-          add: 'built'
-
+        uses: actions/upload-artifact@v4
+        with:
+          path: built
   
   # Single deploy job since we're just deploying
   deploy:
