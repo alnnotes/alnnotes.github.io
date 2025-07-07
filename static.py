@@ -101,9 +101,7 @@ out = template.render(
 
 with open('built/all.html', 'w') as f:
     f.write(out)
+with open('built/index.html', 'w') as f:
+    f.write(out)
 
 print("COMPLETED")
-
-with open('built/index.html', 'w') as f:
-    f.write('hellonewindex!')
-print('nowdone')
