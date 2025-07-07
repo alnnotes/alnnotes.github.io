@@ -25,14 +25,15 @@ jobs:
   # custom build job
   build:
     permissions:
-          contents: write
-  
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13' 
+      - name: rm built
+        run: rm -rf built/
       - name: install pip prereqs
         run: |
           python -m pip install --upgrade pip
