@@ -98,5 +98,23 @@ push that to `main` and it should trigger that yaml
 - i have a new-found respect for dave at my last job, whose domain cicd was
 - stop telling me 'job started'; joining a queue doesn't constitute having 'started', in much the same way as i wouldn't tell someone i was 'having dinner' if i was in fact waiting for the restaurant to finish serving the current diners (plus those in front of me outside)
 
-- hooray first successful run (<https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443>)
-- now `build` dired thrown away with job container
+34 'workflow runs' later, and it's working perfectly. see it at <https://github.com/alnnotes/alnnotes.github.io/blob/main/.github/workflows/buildaln.yml>
+
+couple big things to note:
+
+in the 'Upload artifact' step in the 'deploy' job, `path: 'built/'`
+
+```yaml
+permissions:
+	contents: write
+``` 
+in build
+
+```yaml
+deploy:
+    needs: build
+```
+
+in deploy
+
+one of the commands in `build`: `git commit -am "built files added by action" || echo 'nothing to commit'` stops it saying 'nothing to commit, working tree clean'. this is not an error, but the workflow doesn't handle it well. the short-circuiting allows the command to pass by if no changes were made to the 'build' directory (note that this can be the case even if the built directory is deleted and recreated by the script - the workflow might have been triggered by a push to `requirements.txt` or anything not directly affecting the output)
