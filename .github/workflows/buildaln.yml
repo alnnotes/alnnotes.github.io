@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: run static.py and deploy to pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -25,14 +25,19 @@ jobs:
 
   # custom build job
   build:
+  
     runs-on: ubuntu-latest
     steps:
-      - name: install prereqs
-        run: |
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13' 
+      - name: install pip prereqs
+      - run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r .github/workflows/requirements.txt
       - name: run static
-        run: python static.py
+        run: python .github/workflows/static.py
   
   # Single deploy job since we're just deploying
   deploy:
