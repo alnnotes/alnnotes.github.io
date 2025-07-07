@@ -109,10 +109,20 @@ seems the classic behaviour of pushing whatever's on the configured branch to pa
 - oh god this does take quite a while. at least it dies quickly if there are syntax errors
 - i have a new-found respect for dave at my last job, whose domain cicd was
 - stop telling me 'job started'; joining a queue doesn't constitute having 'started', in much the same way as i wouldn't tell someone i was 'having dinner' if i was in fact waiting for the restaurant to finish serving the current diners (plus those in front of me outside)</p>
-<ul>
-<li>hooray first successful run (<a href="https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443">https://github.com/alnnotes/alnnotes.github.io/actions/runs/16105033443</a>)</li>
-<li>now <code>build</code> dired thrown away with job container</li>
-</ul></div>
+<p>34 'workflow runs' later, and it's working perfectly. see it at <a href="https://github.com/alnnotes/alnnotes.github.io/blob/main/.github/workflows/buildaln.yml">https://github.com/alnnotes/alnnotes.github.io/blob/main/.github/workflows/buildaln.yml</a></p>
+<p>couple big things to note:</p>
+<p>in the 'Upload artifact' step in the 'deploy' job, <code>path: 'built/'</code></p>
+<div class="codehilite"><pre><span></span><div class="lang">yaml</div><span class="nt">permissions</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
+</pre></div>
+
+<p>in build</p>
+<div class="codehilite"><pre><span></span><div class="lang">yaml</div><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+</pre></div>
+
+<p>in deploy</p>
+<p>one of the commands in <code>build</code>: <code>git commit -am "built files added by action" || echo 'nothing to commit'</code> stops it saying 'nothing to commit, working tree clean'. this is not an error, but the workflow doesn't handle it well. the short-circuiting allows the command to pass by if no changes were made to the 'build' directory (note that this can be the case even if the built directory is deleted and recreated by the script - the workflow might have been triggered by a push to <code>requirements.txt</code> or anything not directly affecting the output)</p></div>
 </div>
   </body>
 </html>
